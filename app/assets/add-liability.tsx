@@ -21,10 +21,12 @@ export default function AddLiabilityScreen() {
 
     setLoading(true);
     try {
+        const now = new Date();
       await NetWorthService.addLiability({
         name,
         amount: Number(amount),
         type: type as any,
+          date: now,
       });
       router.back();
     } catch (error) {

@@ -36,7 +36,7 @@ export function AlertsSection({ alerts }: Props) {
             {alert}
           </Text>
         </View>
-      ))
+      ))}
     </View>
   );
 }
