@@ -1,23 +1,80 @@
-import React, { useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { View, StyleSheet, FlatList, Dimensions } from 'react-native';
 import { Modal, Portal, Text, Button, List, useTheme, Searchbar, Surface } from 'react-native-paper';
+import { CategoryGroup } from '@/constants/categories';
 
 interface Props {
   visible: boolean;
   onDismiss: () => void;
   onSelect: (category: string) => void;
-  categories: string[];
+  categories?: string[];
+  groupedCategories?: CategoryGroup[];
 }
 
 const { height } = Dimensions.get('window');
 
-export function CategorySelector({ visible, onDismiss, onSelect, categories }: Props) {
+export function CategorySelector({
+  visible,
+  onDismiss,
+  onSelect,
+  categories = [],
+  groupedCategories,
+}: Props) {
   const theme = useTheme();
   const [searchQuery, setSearchQuery] = useState('');
+  const [selectedGroup, setSelectedGroup] = useState<CategoryGroup | null>(null);
 
-  const filteredCategories = categories.filter(c => 
-    c.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  useEffect(() => {
+    if (!visible) {
+      setSearchQuery('');
+      setSelectedGroup(null);
+    }
+  }, [visible]);
+
+  const filteredGroups = useMemo(() => {
+    if (!groupedCategories?.length) return [];
+    return groupedCategories
+      .map((group) => ({
+        title: group.title,
+        data: group.items.filter((item) =>
+          item.toLowerCase().includes(searchQuery.toLowerCase())
+        ),
+      }))
+      .filter((group) => group.data.length > 0);
+  }, [groupedCategories, searchQuery]);
+
+  const filteredCategories = useMemo(() => {
+    if (groupedCategories?.length) return [];
+    return categories.filter((c) => c.toLowerCase().includes(searchQuery.toLowerCase()));
+  }, [categories, groupedCategories, searchQuery]);
+
+  const searchableLeaves = useMemo(() => {
+    if (!groupedCategories?.length) return [];
+    return groupedCategories.flatMap((group) =>
+      group.items.map((item) => ({ groupTitle: group.title, item }))
+    );
+  }, [groupedCategories]);
+
+  const searchResults = useMemo(() => {
+    if (!searchQuery.trim()) return [];
+    return searchableLeaves.filter(({ item }) =>
+      item.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+  }, [searchQuery, searchableLeaves]);
+
+  const isSearching = searchQuery.trim().length > 0;
+
+  const listData = useMemo(() => {
+    if (!groupedCategories?.length) return [];
+    if (isSearching) return searchResults.map((r) => ({ mode: 'leaf', ...r }));
+    if (selectedGroup)
+      return selectedGroup.items.map((item) => ({
+        mode: 'leaf',
+        groupTitle: selectedGroup.title,
+        item,
+      }));
+    return filteredGroups.map((group) => ({ mode: 'group', groupTitle: group.title, item: group.title }));
+  }, [groupedCategories, isSearching, searchResults, selectedGroup, filteredGroups]);
 
   return (
     <Portal>
@@ -46,29 +103,75 @@ export function CategorySelector({ visible, onDismiss, onSelect, categories }: P
           />
           
           <View style={[styles.listWrapper, { borderColor: theme.colors.outlineVariant }]}>
-            <FlatList
-              data={filteredCategories}
-              keyExtractor={(item, index) => index.toString()}
-              renderItem={({ item }) => (
-                <List.Item
-                  title={item}
-                  onPress={() => {
-                    onSelect(item);
-                    onDismiss();
-                  }}
-                  right={props => <List.Icon {...props} icon="chevron-left" />}
-                  style={[styles.listItem, { borderBottomColor: theme.colors.outlineVariant }]}
-                />
-              )}
-              keyboardShouldPersistTaps="handled"
-              showsVerticalScrollIndicator={true}
-              contentContainerStyle={{ flexGrow: 1 }}
-            />
+            {groupedCategories?.length ? (
+              <FlatList
+                data={listData}
+                keyExtractor={(entry, index) => `${entry.groupTitle}-${entry.item}-${index}`}
+                renderItem={({ item }) => (
+                  <View>
+                    {item.mode === 'group' ? (
+                      <List.Item
+                        title={item.item}
+                        onPress={() => {
+                          const group = groupedCategories?.find((g) => g.title === item.item) || null;
+                          setSelectedGroup(group);
+                        }}
+                        right={(props) => <List.Icon {...props} icon="chevron-left" />}
+                        style={[styles.listItem, { borderBottomColor: theme.colors.outlineVariant }]}
+                      />
+                    ) : (
+                      <List.Item
+                        title={item.item}
+                        description={isSearching ? item.groupTitle : undefined}
+                        onPress={() => {
+                          onSelect(item.item);
+                          onDismiss();
+                        }}
+                        right={(props) => <List.Icon {...props} icon="chevron-left" />}
+                        style={[styles.listItem, { borderBottomColor: theme.colors.outlineVariant }]}
+                      />
+                    )}
+                  </View>
+                )}
+                keyboardShouldPersistTaps="handled"
+                showsVerticalScrollIndicator={true}
+                contentContainerStyle={{ flexGrow: 1 }}
+              />
+            ) : (
+              <FlatList
+                data={filteredCategories}
+                keyExtractor={(item, index) => index.toString()}
+                renderItem={({ item }) => (
+                  <List.Item
+                    title={item}
+                    onPress={() => {
+                      onSelect(item);
+                      onDismiss();
+                    }}
+                    right={(props) => <List.Icon {...props} icon="chevron-left" />}
+                    style={[styles.listItem, { borderBottomColor: theme.colors.outlineVariant }]}
+                  />
+                )}
+                keyboardShouldPersistTaps="handled"
+                showsVerticalScrollIndicator={true}
+                contentContainerStyle={{ flexGrow: 1 }}
+              />
+            )}
           </View>
 
-          <Button mode="outlined" onPress={onDismiss} style={styles.closeButton}>
-            ביטול
-          </Button>
+          {selectedGroup && !isSearching ? (
+            <Button
+              mode="outlined"
+              onPress={() => setSelectedGroup(null)}
+              style={styles.closeButton}
+            >
+              חזרה
+            </Button>
+          ) : (
+            <Button mode="outlined" onPress={onDismiss} style={styles.closeButton}>
+              ביטול
+            </Button>
+          )}
         </Surface>
       </Modal>
     </Portal>

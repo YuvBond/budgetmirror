@@ -62,10 +62,42 @@ CREATE TABLE \`liabilities\` (
 	\`updated_at\` integer NOT NULL
 );`;
 
+const m0001 = `CREATE TABLE \`fixed_budgets\` (
+\t\`id\` text PRIMARY KEY NOT NULL,
+\t\`category\` text NOT NULL,
+\t\`amount\` real NOT NULL,
+\t\`day_of_month\` integer NOT NULL,
+\t\`note\` text,
+\t\`created_at\` integer NOT NULL,
+\t\`updated_at\` integer NOT NULL
+);
+--> statement-breakpoint
+CREATE TABLE \`variable_budgets\` (
+\t\`id\` text PRIMARY KEY NOT NULL,
+\t\`category\` text NOT NULL,
+\t\`amount\` real NOT NULL,
+\t\`month\` integer NOT NULL,
+\t\`carry_to_next_month\` integer DEFAULT false,
+\t\`note\` text,
+\t\`created_at\` integer NOT NULL,
+\t\`updated_at\` integer NOT NULL
+);
+--> statement-breakpoint
+CREATE TABLE \`income_budgets\` (
+\t\`id\` text PRIMARY KEY NOT NULL,
+\t\`category\` text NOT NULL,
+\t\`amount\` real NOT NULL,
+\t\`day_of_month\` integer NOT NULL,
+\t\`note\` text,
+\t\`created_at\` integer NOT NULL,
+\t\`updated_at\` integer NOT NULL
+);`;
+
 const migrations = {
   journal,
   migrations: {
-    m0000
+    m0000,
+    m0001
   }
 };
 

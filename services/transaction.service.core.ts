@@ -1,4 +1,4 @@
-import { incomes, expenses, installmentGroups } from '@/db/schema';
+import { incomes, expenses, installmentGroups, incomeBudgets } from '@/db/schema';
 import { NewIncome, NewExpense, NewInstallmentGroup } from '@/types/domain';
 import { eq, and, gte, lt, desc } from 'drizzle-orm';
 import { buildInstallmentExpenses } from '@/services/transaction-installments';
@@ -9,11 +9,59 @@ type DbLike = any;
 export function createTransactionService(deps: { db: DbLike; uuid: () => string }) {
   const { db, uuid } = deps;
 
+  const ensureIncomeBudgetsForMonth = async (date: Date) => {
+    const startOfMonth = new Date(date.getFullYear(), date.getMonth(), 1);
+    const startOfNextMonth = new Date(date.getFullYear(), date.getMonth() + 1, 1);
+    const lastDay = new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate();
+
+    const budgets = await db.select().from(incomeBudgets);
+    if (budgets.length === 0) return;
+
+    const existing = await db
+      .select()
+      .from(incomes)
+      .where(and(gte(incomes.date, startOfMonth), lt(incomes.date, startOfNextMonth)));
+
+    const existingKeys = new Set(
+      existing
+        .filter((i: any) => typeof i.description === 'string' && i.description.startsWith('תקציב הכנסה:'))
+        .map((i: any) => `${i.description}|${i.date.getTime()}`)
+    );
+
+    const now = new Date();
+    const toInsert: NewIncome[] = [];
+
+    for (const budget of budgets) {
+      const day = Math.min(budget.dayOfMonth, lastDay);
+      const budgetDate = new Date(date.getFullYear(), date.getMonth(), day);
+      const description = `תקציב הכנסה:${budget.id}`;
+      const key = `${description}|${budgetDate.getTime()}`;
+      if (existingKeys.has(key)) continue;
+
+      toInsert.push({
+        id: uuid(),
+        amount: budget.amount,
+        description,
+        category: budget.category,
+        date: budgetDate,
+        isRecurring: false,
+        createdAt: now,
+        updatedAt: now,
+      });
+    }
+
+    if (toInsert.length > 0) {
+      await db.insert(incomes).values(toInsert);
+    }
+  };
+
   return {
     // Incomes
     async getIncomesByMonth(date: Date) {
       const startOfMonth = new Date(date.getFullYear(), date.getMonth(), 1);
       const startOfNextMonth = new Date(date.getFullYear(), date.getMonth() + 1, 1);
+
+      await ensureIncomeBudgetsForMonth(date);
 
       return await db
         .select()

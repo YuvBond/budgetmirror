@@ -20,10 +20,10 @@ describe('MonthSelector', () => {
     getByText(format(date, 'MMMM yyyy', { locale: he }));
 
     fireEvent.press(getByTestId('month-selector-next'));
-    expect(onNext).toHaveBeenCalledTimes(1);
+    expect(onPrev).toHaveBeenCalledTimes(1);
 
     fireEvent.press(getByTestId('month-selector-prev'));
-    expect(onPrev).toHaveBeenCalledTimes(1);
+    expect(onNext).toHaveBeenCalledTimes(1);
   });
 });
 

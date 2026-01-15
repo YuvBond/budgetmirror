@@ -6,7 +6,10 @@ import { TransactionService } from '@/services/transaction.service';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { Platform } from 'react-native';
 import { CategorySelector } from '@/components/CategorySelector';
-import { FIXED_EXPENSE_CATEGORIES, VARIABLE_EXPENSE_CATEGORIES } from '@/constants/categories';
+import {
+  FIXED_EXPENSE_CATEGORY_GROUPS,
+  VARIABLE_EXPENSE_CATEGORY_GROUPS,
+} from '@/constants/categories';
 
 export default function AddExpenseScreen() {
   const router = useRouter();
@@ -25,7 +28,7 @@ export default function AddExpenseScreen() {
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [showCategoryPicker, setShowCategoryPicker] = useState(false);
 
-  const categories = type === 'FIXED' ? FIXED_EXPENSE_CATEGORIES : VARIABLE_EXPENSE_CATEGORIES;
+  const categoryGroups = type === 'FIXED' ? FIXED_EXPENSE_CATEGORY_GROUPS : VARIABLE_EXPENSE_CATEGORY_GROUPS;
 
   const handleSave = async () => {
     if (!amount || isNaN(Number(amount)) || !category) {
@@ -169,7 +172,7 @@ export default function AddExpenseScreen() {
         visible={showCategoryPicker}
         onDismiss={() => setShowCategoryPicker(false)}
         onSelect={setCategory}
-        categories={categories}
+        groupedCategories={categoryGroups}
       />
     </View>
   );

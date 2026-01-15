@@ -3,9 +3,11 @@ import { View, StyleSheet, ScrollView } from 'react-native';
 import { Text, List, Button, Divider, useTheme } from 'react-native-paper';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { ExportService } from '@/services/export.service';
+import { useRouter } from 'expo-router';
 
 export default function SettingsScreen() {
   const theme = useTheme();
+  const router = useRouter();
   const [exporting, setExporting] = useState(false);
 
   const handleExport = async () => {
@@ -21,6 +23,13 @@ export default function SettingsScreen() {
 
         <List.Section>
           <List.Subheader>נתונים</List.Subheader>
+
+          <List.Item
+            title="תקציב חודשי"
+            description="הגדרת תקציבי קבועות/משתנות/הכנסות"
+            left={(props) => <List.Icon {...props} icon="calendar-check" />}
+            onPress={() => router.push('/budgets')}
+          />
           
           <List.Item
             title="ייצוא לאקסל"

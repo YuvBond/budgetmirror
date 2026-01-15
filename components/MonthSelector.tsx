@@ -32,8 +32,8 @@ export function MonthSelector({ date, onNext, onPrev }: Props) {
       */}
       
       <IconButton 
-        icon="chevron-right" 
-        onPress={onNext}
+        icon="chevron-left" 
+        onPress={onPrev}
         accessibilityLabel="חודש הבא"
         testID="month-selector-next"
         iconColor={theme.colors.primary}
@@ -44,8 +44,8 @@ export function MonthSelector({ date, onNext, onPrev }: Props) {
       </Text>
 
       <IconButton 
-        icon="chevron-left" 
-        onPress={onPrev}
+        icon="chevron-right" 
+        onPress={onNext}
         accessibilityLabel="חודש קודם"
         testID="month-selector-prev"
         iconColor={theme.colors.primary}

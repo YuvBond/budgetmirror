@@ -36,6 +36,15 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
+        name="budget-status"
+        options={{
+          title: 'תקציב',
+          tabBarIcon: ({ color, size }) => (
+            <MaterialCommunityIcons name="chart-donut-variant" size={size} color={color} />
+          ),
+        }}
+      />
+      <Tabs.Screen
         name="assets"
         options={{
           title: 'נכסים', // Assets

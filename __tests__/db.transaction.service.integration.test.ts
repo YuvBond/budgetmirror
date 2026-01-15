@@ -1,6 +1,6 @@
 import { createTestDb } from '@/db/test-db';
 import { createTransactionService } from '@/services/transaction.service.core';
-import { expenses, incomes, installmentGroups } from '@/db/schema';
+import { expenses, incomes, installmentGroups, incomeBudgets } from '@/db/schema';
 import { eq } from 'drizzle-orm';
 
 describe('DB integration: TransactionService (core)', () => {
@@ -84,5 +84,25 @@ describe('DB integration: TransactionService (core)', () => {
     expect(all.some((t) => t.isIncome === true)).toBe(true);
     expect(all.some((t) => t.isIncome === false)).toBe(true);
   });
+
+  it('auto-creates income from income budget on month view (budget-based income)', async () => {
+    const { db } = await createTestDb();
+    const svc = createTransactionService({ db, uuid: () => 'uuid-budget' });
+
+    await db.insert(incomeBudgets).values({
+      id: 'b-1',
+      category: 'משכורת',
+      amount: 10000,
+      dayOfMonth: 10,
+      note: null,
+      createdAt: new Date(2026, 0, 1),
+      updatedAt: new Date(2026, 0, 1),
+    });
+
+    const feb = await svc.getIncomesByMonth(new Date(2026, 1, 2));
+    expect(feb).toHaveLength(1);
+    expect(feb[0].category).toBe('משכורת');
+  });
+
 });
 

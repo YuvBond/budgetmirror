@@ -53,3 +53,34 @@ export const liabilities = sqliteTable('liabilities', {
   date: integer('date', { mode: 'timestamp' }).notNull(),
   updatedAt: integer('updated_at', { mode: 'timestamp' }).notNull(),
 });
+
+export const fixedBudgets = sqliteTable('fixed_budgets', {
+  id: text('id').primaryKey(),
+  category: text('category').notNull(),
+  amount: real('amount').notNull(),
+  dayOfMonth: integer('day_of_month').notNull(),
+  note: text('note'),
+  createdAt: integer('created_at', { mode: 'timestamp' }).notNull(),
+  updatedAt: integer('updated_at', { mode: 'timestamp' }).notNull(),
+});
+
+export const variableBudgets = sqliteTable('variable_budgets', {
+  id: text('id').primaryKey(),
+  category: text('category').notNull(),
+  amount: real('amount').notNull(),
+  month: integer('month', { mode: 'timestamp' }).notNull(), // first day of month
+  carryToNextMonth: integer('carry_to_next_month', { mode: 'boolean' }).default(false),
+  note: text('note'),
+  createdAt: integer('created_at', { mode: 'timestamp' }).notNull(),
+  updatedAt: integer('updated_at', { mode: 'timestamp' }).notNull(),
+});
+
+export const incomeBudgets = sqliteTable('income_budgets', {
+  id: text('id').primaryKey(),
+  category: text('category').notNull(),
+  amount: real('amount').notNull(),
+  dayOfMonth: integer('day_of_month').notNull(),
+  note: text('note'),
+  createdAt: integer('created_at', { mode: 'timestamp' }).notNull(),
+  updatedAt: integer('updated_at', { mode: 'timestamp' }).notNull(),
+});

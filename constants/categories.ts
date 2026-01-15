@@ -1,3 +1,8 @@
+export type CategoryGroup = {
+  title: string;
+  items: string[];
+};
+
 export const FIXED_EXPENSE_CATEGORIES = [
   "שכר דירה",
   "גז",
@@ -77,3 +82,174 @@ export const INCOME_CATEGORIES = [
   "מתנות",
   "אחר"
 ];
+
+export const FIXED_EXPENSE_CATEGORY_GROUPS: CategoryGroup[] = [
+  {
+    title: "הוצאות בית",
+    items: [
+      "שכר דירה",
+      "גז",
+      "חשמל",
+      "מים",
+      "ארנונה",
+      "ועד בית",
+      "משכנתא - כולל ביטוח",
+      "עוזרת בית",
+      "עיתונים",
+      "בר מים",
+    ],
+  },
+  {
+    title: "תקשורת",
+    items: [
+      "טלפון",
+      "טלפון נייד ",
+      "אינטרנט ",
+      "כבלים/ טלויזיה בלווין ",
+    ],
+  },
+  {
+    title: "חינוך",
+    items: [
+      "מעון",
+      "חוגים/ שיעורי עזר",
+      "גן",
+      "פסיכולוג/ הוראה מתקנת ",
+      "ביה\"ס ",
+    ],
+  },
+  {
+    title: "בריאות",
+    items: [
+      "קופ\"ח ביטוח בריאות משלים",
+      "ביטוח חיים ריסק+ מחלות",
+      "ביטוח סיעודי פרטי",
+      "ביטוח רפואי פרטי",
+    ],
+  },
+  {
+    title: "תחבורה",
+    items: [
+      "ביטוח רכב",
+      "כביש 6 + חניות",
+      "רכב טיפולים ורישוי",
+    ],
+  },
+  {
+    title: "בנקיים ואשראי",
+    items: [
+      "הלוואות",
+      "ריבית על המינוס",
+      "עמלות בנק",
+      "חסכונות ",
+    ],
+  },
+  {
+    title: "שונות",
+    items: [
+      "נסיעות וחופשות",
+      "מעשר",
+      "קרן חרום ",
+      "בלת\"ם",
+      "שונות",
+      "אחר",
+    ],
+  },
+];
+
+export const VARIABLE_EXPENSE_CATEGORY_GROUPS: CategoryGroup[] = [
+  {
+    title: "מזון",
+    items: [
+      "אוכל ומוצרי מכולת",
+      "ירקות פירות",
+    ],
+  },
+  {
+    title: "תינוקות",
+    items: [
+      "הוצאות תינוקות ",
+    ],
+  },
+  {
+    title: "ביגוד וטיפוח",
+    items: [
+      "ביגוד והנעלה",
+      "קוסמטיקה טיפולים ומוצרים",
+      "מספרה",
+    ],
+  },
+  {
+    title: "בריאות",
+    items: [
+      "הוצאות רפואיות",
+      "טיפולי שיניים",
+    ],
+  },
+  {
+    title: "תחבורה",
+    items: [
+      "דלק",
+      "אחזקת רכב",
+      "חניונים - פנגו",
+    ],
+  },
+  {
+    title: "בית",
+    items: [
+      "מוצרים ורהיטים לבית",
+      "אחזקת הבית ",
+    ],
+  },
+  {
+    title: "פנאי ובילויים",
+    items: [
+      "ספרים דיסקים",
+      "בילויים",
+      "מסעדות",
+    ],
+  },
+  {
+    title: "משפחה ומתנות",
+    items: [
+      "מתנות לבני משפחה",
+      "דמי כיס",
+      "צעצועים",
+      "מתנות לאירועים",
+    ],
+  },
+  {
+    title: "חיות מחמד",
+    items: [
+      "חיות מחמד",
+    ],
+  },
+  {
+    title: "אשראי ופיננסים",
+    items: [
+      "ויזה תשלומים",
+      "כיסוי מינוס",
+      "מזומן שונות",
+    ],
+  },
+  {
+    title: "שונות",
+    items: [
+      "תקציב פינוקים",
+      "שונות",
+      "אחר",
+    ],
+  },
+];
+
+export const EXPENSE_CATEGORY_GROUP_MAP: Record<string, string> = [
+  ...FIXED_EXPENSE_CATEGORY_GROUPS.flatMap((group) =>
+    group.items.map((item) => [item, group.title] as const)
+  ),
+  ...VARIABLE_EXPENSE_CATEGORY_GROUPS.flatMap((group) =>
+    group.items.map((item) => [item, group.title] as const)
+  ),
+].reduce((acc, [item, group]) => {
+  acc[item] = group;
+  return acc;
+}, {} as Record<string, string>);
