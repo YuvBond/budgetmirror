@@ -12,7 +12,10 @@
       "supportsTablet": true,
       "bundleIdentifier": "com.moranzukerman.budgetmirror.app",
       "buildNumber": "1",
-      "icon": "./assets/images/icon.png"
+      "icon": "./assets/images/icon.png",
+      "infoPlist": {
+        "ITSAppUsesNonExemptEncryption": false
+      }
     },
     "android": {
       "adaptiveIcon": {
@@ -46,6 +49,12 @@
     "experiments": {
       "typedRoutes": true,
       "reactCompiler": true
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "cc23e6b4-2f02-42e0-8e14-9d7afc4612f0"
+      }
     }
   }
 }
