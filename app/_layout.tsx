@@ -89,6 +89,7 @@ const PaperLightTheme = {
     ...MD3LightTheme.colors,
     primary: '#006d77',
     secondary: '#83c5be',
+    background: '#F6FAFB',
   },
 };
 
@@ -98,13 +99,49 @@ const PaperDarkTheme = {
     ...MD3DarkTheme.colors,
     primary: '#83c5be',
     secondary: '#006d77',
+    background: '#0B1215',
+    surface: '#0F171B',
+    surfaceVariant: '#16232B',
+    outlineVariant: '#2B3B43',
+    elevation: {
+      ...MD3DarkTheme.colors.elevation,
+      level0: 'transparent',
+      level1: '#101B20',
+      level2: '#122027',
+      level3: '#14252E',
+      level4: '#162A35',
+      level5: '#17303C',
+    },
   },
 };
 
 export default function RootLayout() {
   const colorScheme = useColorScheme();
   const paperTheme = colorScheme === 'dark' ? PaperDarkTheme : PaperLightTheme;
-  const navTheme = colorScheme === 'dark' ? NavDarkTheme : NavLightTheme;
+  const navTheme =
+    colorScheme === 'dark'
+      ? {
+          ...NavDarkTheme,
+          colors: {
+            ...NavDarkTheme.colors,
+            background: paperTheme.colors.background,
+            card: paperTheme.colors.surface,
+            text: paperTheme.colors.onSurface,
+            border: paperTheme.colors.outlineVariant,
+            primary: paperTheme.colors.primary,
+          },
+        }
+      : {
+          ...NavLightTheme,
+          colors: {
+            ...NavLightTheme.colors,
+            background: paperTheme.colors.background,
+            card: paperTheme.colors.surface,
+            text: paperTheme.colors.onSurface,
+            border: paperTheme.colors.outlineVariant,
+            primary: paperTheme.colors.primary,
+          },
+        };
 
   const { success, error } = useMigrations(db, migrations);
 
@@ -138,7 +175,7 @@ export default function RootLayout() {
           <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
           <Stack.Screen name="+not-found" options={{ title: 'Oops!' }} />
         </Stack>
-        <StatusBar style="auto" />
+        <StatusBar style={colorScheme === 'dark' ? 'light' : 'dark'} />
       </ThemeProvider>
     </PaperProvider>
   );

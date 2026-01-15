@@ -11,6 +11,8 @@ export default function TransactionsScreen() {
   const theme = useTheme();
   const [sections, setSections] = useState<any[]>([]);
   const [refreshing, setRefreshing] = useState(false);
+  const incomeColor = theme.colors.primary;
+  const expenseColor = theme.colors.error;
 
   const loadData = async () => {
     setRefreshing(true);
@@ -71,7 +73,7 @@ export default function TransactionsScreen() {
     if (isYesterday(date)) label = 'אתמול';
 
     return (
-      <View style={styles.header}>
+      <View style={[styles.header, { backgroundColor: theme.colors.background }]}>
         <Text variant="titleSmall" style={{ fontWeight: 'bold', color: theme.colors.outline }}>
           {label}
         </Text>
@@ -87,7 +89,7 @@ export default function TransactionsScreen() {
         <List.Icon 
           {...props} 
           icon={item.isIncome ? 'arrow-down-circle' : 'arrow-up-circle'} 
-          color={item.isIncome ? 'green' : 'red'} 
+          color={item.isIncome ? incomeColor : expenseColor} 
         />
       )}
       right={props => (
@@ -96,7 +98,7 @@ export default function TransactionsScreen() {
             variant="bodyMedium" 
             style={{ 
               fontWeight: 'bold', 
-              color: item.isIncome ? 'green' : 'red',
+              color: item.isIncome ? incomeColor : expenseColor,
               alignSelf: 'center' 
             }}
           >
@@ -110,12 +112,12 @@ export default function TransactionsScreen() {
           />
         </View>
       )}
-      style={styles.item}
+      style={[styles.item, { backgroundColor: theme.colors.surface }]}
     />
   );
 
   return (
-    <SafeAreaView style={styles.container} edges={['top']}>
+    <SafeAreaView style={[styles.container, { backgroundColor: theme.colors.background }]} edges={['top']}>
       <Text variant="headlineMedium" style={styles.title}>היסטוריית תנועות</Text>
       <SectionList
         sections={sections}
@@ -133,7 +135,6 @@ export default function TransactionsScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f5f5f5',
   },
   title: {
     textAlign: 'center',
@@ -141,12 +142,10 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   header: {
-    backgroundColor: '#f5f5f5',
     paddingHorizontal: 16,
     paddingVertical: 8,
   },
   item: {
-    backgroundColor: 'white',
     marginBottom: 1,
   },
   rightContainer: {

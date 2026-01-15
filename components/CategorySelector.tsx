@@ -26,17 +26,26 @@ export function CategorySelector({ visible, onDismiss, onSelect, categories }: P
         onDismiss={onDismiss} 
         contentContainerStyle={styles.modalContent}
       >
-        <Surface style={styles.surface} elevation={4}>
+        <Surface
+          style={[
+            styles.surface,
+            {
+              backgroundColor: theme.colors.elevation.level3,
+              borderColor: theme.colors.outlineVariant,
+            },
+          ]}
+          elevation={4}
+        >
           <Text variant="titleMedium" style={styles.title}>בחר קטגוריה</Text>
           
           <Searchbar
             placeholder="חיפוש..."
             onChangeText={setSearchQuery}
             value={searchQuery}
-            style={styles.searchbar}
+            style={[styles.searchbar, { backgroundColor: theme.colors.elevation.level2 }]}
           />
           
-          <View style={styles.listWrapper}>
+          <View style={[styles.listWrapper, { borderColor: theme.colors.outlineVariant }]}>
             <FlatList
               data={filteredCategories}
               keyExtractor={(item, index) => index.toString()}
@@ -48,7 +57,7 @@ export function CategorySelector({ visible, onDismiss, onSelect, categories }: P
                     onDismiss();
                   }}
                   right={props => <List.Icon {...props} icon="chevron-left" />}
-                  style={styles.listItem}
+                  style={[styles.listItem, { borderBottomColor: theme.colors.outlineVariant }]}
                 />
               )}
               keyboardShouldPersistTaps="handled"
@@ -74,13 +83,13 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(0,0,0,0.5)', // Dim background
   },
   surface: {
-    backgroundColor: 'white',
     padding: 20,
     borderRadius: 12,
     height: height * 0.7, // Fixed height: 70% of screen
     width: '100%',
     display: 'flex',
     flexDirection: 'column',
+    borderWidth: StyleSheet.hairlineWidth,
   },
   title: {
     textAlign: 'center',
@@ -89,19 +98,16 @@ const styles = StyleSheet.create({
   },
   searchbar: {
     marginBottom: 10,
-    backgroundColor: '#f0f0f0',
   },
   listWrapper: {
     flex: 1, // Take all available space between searchbar and button
     marginVertical: 10,
     borderWidth: 1,
-    borderColor: '#f0f0f0',
     borderRadius: 8,
   },
   listItem: {
     paddingVertical: 8, // More touch area
     borderBottomWidth: 0.5,
-    borderBottomColor: '#eee',
   },
   closeButton: {
     marginTop: 'auto', // Push to bottom if needed, but flex:1 on listWrapper should handle it

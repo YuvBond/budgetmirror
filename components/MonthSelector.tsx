@@ -14,7 +14,15 @@ export function MonthSelector({ date, onNext, onPrev }: Props) {
   const theme = useTheme();
 
   return (
-    <View style={styles.container}>
+    <View
+      style={[
+        styles.container,
+        {
+          backgroundColor: theme.colors.surface,
+          borderColor: theme.colors.outlineVariant,
+        },
+      ]}
+    >
       {/* Right Arrow (Previous Month in RTL timeline logic?) 
           Actually, let's keep it simple: 
           Right Arrow = Next Month (Future)
@@ -52,8 +60,8 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     marginBottom: 16,
-    backgroundColor: 'white',
     borderRadius: 8,
     elevation: 1,
+    borderWidth: StyleSheet.hairlineWidth,
   },
 });

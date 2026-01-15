@@ -34,7 +34,7 @@ export default function DashboardScreen() {
   );
 
   return (
-    <SafeAreaView style={styles.container} edges={['top']}>
+    <SafeAreaView style={[styles.container, { backgroundColor: theme.colors.background }]} edges={['top']}>
       <ScrollView
         contentContainerStyle={styles.scrollContent}
         refreshControl={
@@ -71,13 +71,15 @@ export default function DashboardScreen() {
           {
             icon: 'arrow-down',
             label: 'הכנסה',
-            style: { backgroundColor: '#4caf50' },
+            style: { backgroundColor: theme.colors.secondaryContainer },
+            color: theme.colors.onSecondaryContainer,
             onPress: () => router.push('/transactions/add-income'),
           },
           {
             icon: 'arrow-up',
             label: 'הוצאה',
-            style: { backgroundColor: '#f44336' },
+            style: { backgroundColor: theme.colors.errorContainer },
+            color: theme.colors.onErrorContainer,
             onPress: () => router.push('/transactions/add-expense'),
           },
         ]}
@@ -90,7 +92,6 @@ export default function DashboardScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f5f5f5',
   },
   scrollContent: {
     padding: 16,

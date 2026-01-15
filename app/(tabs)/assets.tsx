@@ -20,6 +20,8 @@ export default function AssetsScreen() {
   } = useNetWorthStore();
   
   const [fabOpen, setFabOpen] = useState(false);
+  const assetColor = theme.dark ? '#81C784' : '#2E7D32';
+  const liabilityColor = theme.dark ? '#EF9A9A' : '#C62828';
 
   useFocusEffect(
     useCallback(() => {
@@ -28,7 +30,7 @@ export default function AssetsScreen() {
   );
 
   return (
-    <SafeAreaView style={styles.container} edges={['top']}>
+    <SafeAreaView style={[styles.container, { backgroundColor: theme.colors.background }]} edges={['top']}>
       <ScrollView
         contentContainerStyle={styles.scrollContent}
         refreshControl={
@@ -40,7 +42,7 @@ export default function AssetsScreen() {
         </Text>
 
         {/* Summary Card */}
-        <Card style={styles.summaryCard}>
+        <Card style={[styles.summaryCard, { backgroundColor: theme.colors.surface }]}>
           <Card.Content>
             <Text variant="titleMedium">שווי נקי כולל</Text>
             <Text variant="displaySmall" style={{ fontWeight: 'bold', color: theme.colors.primary }}>
@@ -49,13 +51,13 @@ export default function AssetsScreen() {
             <View style={styles.row}>
               <View>
                 <Text variant="bodySmall">סה״כ נכסים</Text>
-                <Text variant="titleMedium" style={{ color: 'green' }}>
+                <Text variant="titleMedium" style={{ color: assetColor }}>
                   ₪{totalAssets.toLocaleString()}
                 </Text>
               </View>
               <View>
                 <Text variant="bodySmall">סה״כ התחייבויות</Text>
-                <Text variant="titleMedium" style={{ color: 'red' }}>
+                <Text variant="titleMedium" style={{ color: liabilityColor }}>
                   ₪{totalLiabilities.toLocaleString()}
                 </Text>
               </View>
@@ -65,39 +67,39 @@ export default function AssetsScreen() {
 
         {/* Assets List */}
         <List.Section>
-          <List.Subheader style={styles.subheader}>נכסים</List.Subheader>
+          <List.Subheader style={[styles.subheader, { color: theme.colors.onSurface }]}>נכסים</List.Subheader>
           {assets.length === 0 ? (
-            <Text style={styles.emptyText}>אין נכסים רשומים</Text>
+            <Text style={[styles.emptyText, { color: theme.colors.onSurfaceVariant }]}>אין נכסים רשומים</Text>
           ) : (
             assets.map((asset) => (
               <List.Item
                 key={asset.id}
                 title={asset.name}
                 description={format(new Date(asset.updatedAt), 'dd/MM/yyyy')}
-                right={() => <Text style={styles.amountText}>₪{asset.amount.toLocaleString()}</Text>}
-                left={(props) => <List.Icon {...props} icon="bank" color="green" />}
-                style={styles.listItem}
+                right={() => <Text style={[styles.amountText, { color: theme.colors.onSurface }]}>₪{asset.amount.toLocaleString()}</Text>}
+                left={(props) => <List.Icon {...props} icon="bank" color={assetColor} />}
+                style={[styles.listItem, { backgroundColor: theme.colors.surface }]}
               />
             ))
           )}
         </List.Section>
 
-        <Divider />
+        <Divider style={{ backgroundColor: theme.colors.outlineVariant }} />
 
         {/* Liabilities List */}
         <List.Section>
-          <List.Subheader style={styles.subheader}>התחייבויות</List.Subheader>
+          <List.Subheader style={[styles.subheader, { color: theme.colors.onSurface }]}>התחייבויות</List.Subheader>
           {liabilities.length === 0 ? (
-            <Text style={styles.emptyText}>אין התחייבויות רשומות</Text>
+            <Text style={[styles.emptyText, { color: theme.colors.onSurfaceVariant }]}>אין התחייבויות רשומות</Text>
           ) : (
             liabilities.map((liability) => (
               <List.Item
                 key={liability.id}
                 title={liability.name}
                 description={format(new Date(liability.updatedAt), 'dd/MM/yyyy')}
-                right={() => <Text style={styles.amountText}>₪{liability.amount.toLocaleString()}</Text>}
-                left={(props) => <List.Icon {...props} icon="credit-card-outline" color="red" />}
-                style={styles.listItem}
+                right={() => <Text style={[styles.amountText, { color: theme.colors.onSurface }]}>₪{liability.amount.toLocaleString()}</Text>}
+                left={(props) => <List.Icon {...props} icon="credit-card-outline" color={liabilityColor} />}
+                style={[styles.listItem, { backgroundColor: theme.colors.surface }]}
               />
             ))
           )}
@@ -113,13 +115,15 @@ export default function AssetsScreen() {
           {
             icon: 'bank-plus',
             label: 'הוסף נכס',
-            style: { backgroundColor: '#4caf50' },
+            style: { backgroundColor: theme.colors.secondaryContainer },
+            color: theme.colors.onSecondaryContainer,
             onPress: () => router.push('/assets/add-asset'),
           },
           {
             icon: 'credit-card-plus',
             label: 'הוסף התחייבות',
-            style: { backgroundColor: '#f44336' },
+            style: { backgroundColor: theme.colors.errorContainer },
+            color: theme.colors.onErrorContainer,
             onPress: () => router.push('/assets/add-liability'),
           },
         ]}
@@ -132,7 +136,6 @@ export default function AssetsScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f5f5f5',
   },
   scrollContent: {
     padding: 16,
@@ -145,7 +148,6 @@ const styles = StyleSheet.create({
   },
   summaryCard: {
     marginBottom: 16,
-    backgroundColor: 'white',
   },
   row: {
     flexDirection: 'row',
@@ -155,10 +157,8 @@ const styles = StyleSheet.create({
   subheader: {
     fontSize: 18,
     fontWeight: 'bold',
-    color: '#333',
   },
   listItem: {
-    backgroundColor: 'white',
     marginBottom: 1,
   },
   amountText: {
@@ -168,7 +168,6 @@ const styles = StyleSheet.create({
   },
   emptyText: {
     textAlign: 'center',
-    color: '#888',
     marginBottom: 16,
   },
 });

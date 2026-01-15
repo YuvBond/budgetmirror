@@ -10,15 +10,18 @@ export function NetWorthCard({ amount }: Props) {
   const theme = useTheme();
 
   return (
-    <Card style={styles.card}>
+    <Card style={[styles.card, { backgroundColor: theme.colors.secondaryContainer }]}>
       <Card.Content style={styles.content}>
         <View style={styles.row}>
-          <Icon source="wallet" size={24} color={theme.colors.secondary} />
-          <Text variant="titleMedium" style={{ fontWeight: 'bold', marginLeft: 8 }}>
+          <Icon source="wallet" size={24} color={theme.colors.onSecondaryContainer} />
+          <Text
+            variant="titleMedium"
+            style={{ fontWeight: 'bold', marginLeft: 8, color: theme.colors.onSecondaryContainer }}
+          >
             שווי נקי
           </Text>
         </View>
-        <Text variant="headlineSmall" style={{ fontWeight: 'bold', color: theme.colors.secondary }}>
+        <Text variant="headlineSmall" style={{ fontWeight: 'bold', color: theme.colors.onSecondaryContainer }}>
           ₪{amount.toLocaleString()}
         </Text>
       </Card.Content>
@@ -29,7 +32,6 @@ export function NetWorthCard({ amount }: Props) {
 const styles = StyleSheet.create({
   card: {
     marginBottom: 16,
-    backgroundColor: '#f0f4f8', // Light blue-ish grey, usually derived from theme
   },
   content: {
     flexDirection: 'row',

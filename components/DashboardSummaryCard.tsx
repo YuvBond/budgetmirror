@@ -11,6 +11,8 @@ interface Props {
 export function DashboardSummaryCard({ balance, income, expenses }: Props) {
   const theme = useTheme();
   const isPositive = balance >= 0;
+  const incomeColor = theme.colors.primary;
+  const expenseColor = theme.colors.error;
 
   return (
     <Card style={styles.card}>
@@ -43,21 +45,21 @@ export function DashboardSummaryCard({ balance, income, expenses }: Props) {
            </View>
         </View>
 
-        <View style={styles.divider} />
+        <View style={[styles.divider, { backgroundColor: theme.colors.outlineVariant }]} />
 
         <View style={styles.row}>
           <StatItem
             label="הכנסות"
             amount={income}
             icon="arrow-down"
-            color="green"
+            color={incomeColor}
           />
           <View style={{ width: 1, backgroundColor: theme.colors.outlineVariant }} />
           <StatItem
             label="הוצאות"
             amount={expenses}
             icon="arrow-up"
-            color="red"
+            color={expenseColor}
           />
         </View>
       </Card.Content>
@@ -94,7 +96,6 @@ const styles = StyleSheet.create({
   },
   divider: {
     height: 1,
-    backgroundColor: '#e0e0e0', // better to use theme colors usually
     marginVertical: 16,
   },
   row: {
