@@ -9,7 +9,10 @@
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.moranzukerman.budgetmirror.app",
+      "buildNumber": "1",
+      "icon": "./assets/images/icon.png"
     },
     "android": {
       "adaptiveIcon": {
